@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: osdk-ns-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: osdk-ns-test
+  template:
+    metadata:
+      labels:
+        name: osdk-ns-test
+    spec:
+      serviceAccountName: osdk-ns-test
+      containers:
+        - name: osdk-ns-test
+          # Replace this with the built image name
+          image: REPLACE_IMAGE
+          command:
+          - osdk-ns-test
+          imagePullPolicy: Always
+          env:
+            - name: WATCH_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: OPERATOR_NAME
+              value: "osdk-ns-test"
